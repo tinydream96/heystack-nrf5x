@@ -3,7 +3,7 @@ TARGETS          := nrf52810_xxaa nrf52810_xxaa-dcdc
 OUTPUT_DIRECTORY := _build
 
 NRF_ROOT := ../..
-SDK_ROOT := $(NRF_ROOT)/nrf-sdk/nRF5_SDK_15.3.0_59ac345
+SDK_ROOT := $(NRF_ROOT)/nrf-sdk/nRF5_SDK_17.1.0_ddde560
 PROJ_DIR := ../..
 
 $(OUTPUT_DIRECTORY)/nrf52810_xxaa.out: \
@@ -15,7 +15,7 @@ $(OUTPUT_DIRECTORY)/nrf52810_xxaa-dcdc.out: \
 NRF_BASE_MODEL := nrf52
 SOFTDEVICE_MODEL := s112
 SOFTDEVICE_FLAGS := -DS112
-SOFTDEVICE_VERSION := 6.1.1
+SOFTDEVICE_VERSION := 7.2.0
 
 ifeq ($(HAS_BATTERY), 1)
   SRC_FILES += \
@@ -57,10 +57,7 @@ SRC_FILES += \
   $(SDK_ROOT)/components/libraries/strerror/nrf_strerror.c \
   $(SDK_ROOT)/modules/nrfx/mdk/system_nrf52810.c \
   $(SDK_ROOT)/components/boards/boards.c \
-  $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_clock.c \
   $(SDK_ROOT)/modules/nrfx/soc/nrfx_atomic.c \
-  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_clock.c \
-  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_gpiote.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/prs/nrfx_prs.c \
   $(PROJ_DIR)/main.c \
   $(PROJ_DIR)/ble_stack.c \

@@ -7,12 +7,13 @@ KEY_ROTATION_INTERVAL ?= 3600
 ADVERTISING_INTERVAL ?= 1000
 RANDOM_ROTATE_KEYS ?= 1
 
-GNU_INSTALL_ROOT ?= $(CURDIR)/nrf-sdk/gcc-arm-none-eabi-6-2017-q2-update
-
+GNU_INSTALL_ROOT ?= $(CURDIR)/nrf-sdk/arm-gnu-toolchain-13.3.rel1-x86_64-arm-none-eabi
 
 TARGETS := \
 	nrf51822_xxac \
 	nrf51822_xxac-dcdc \
+	nrf52805_xxaa \
+	nrf52805_xxaa-dcdc \
 	nrf52810_xxaa \
 	nrf52810_xxaa-dcdc \
 	nrf52832_xxaa \
@@ -70,3 +71,22 @@ all: $(TARGETS)
 
 clean: $(foreach target,$(TARGETS),$(target)-clean)
 	rm -rf ./release
+
+
+.PHONY: sdk sdk-download sdk-unzip sdk-patch
+sdk: sdk-download sdk-unzip sdk-patch
+
+sdk-download:
+	wget -c https://nsscprodmedia.blob.core.windows.net/prod/software-and-other-downloads/sdks/nrf5/binaries/nrf5_sdk_17.1.0_ddde560.zip -O ./nrf-sdk/nRF5_SDK_17.1.0_ddde560.zip
+	wget -c https://nsscprodmedia.blob.core.windows.net/prod/software-and-other-downloads/sdks/nrf5/binaries/nrf5sdk1230.zip -O ./nrf-sdk/nRF5_SDK_12.3.0_d7731ad.zip
+	wget -c https://github.com/NordicSemiconductor/nrfx/releases/download/v3.8.0/nrfx-v3.8.0-4fb7ccb3.zip -O ./nrf-sdk/nrfx-v3.8.0-4fb7ccb3.zip
+	wget -c https://developer.arm.com/-/media/Files/downloads/gnu/13.3.rel1/binrel/arm-gnu-toolchain-13.3.rel1-x86_64-arm-none-eabi.tar.xz -O nrf-sdk/arm-gnu-toolchain-13.3.rel1-x86_64-arm-none-eabi.tar.xz
+
+sdk-unzip:
+	cd ./nrf-sdk && unzip -o nRF5_SDK_17.1.0_ddde560.zip
+	cd ./nrf-sdk && unzip -o nRF5_SDK_12.3.0_d7731ad.zip
+	cd ./nrf-sdk/nRF5_SDK_17.1.0_ddde560/modules/nrfx/ && unzip -o ../../../nrfx-v3.8.0-4fb7ccb3.zip
+	cd ./nrf-sdk && tar -xvf arm-gnu-toolchain-13.3.rel1-x86_64-arm-none-eabi.tar.xz
+
+sdk-patch:
+	cd nrf-sdk && patch -p1 < patches/nrf-power-fix.patch
