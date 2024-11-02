@@ -36,7 +36,7 @@ TOOLCHAIN_DIR := $(shell dirname $(GNU_INSTALL_ROOT_NO_SLASH))
 
 $(1):
 	$$(MAKE) -C $$(DIR_$(1))/armgcc \
-		GNU_INSTALL_ROOT=$$(if $$(findstring nrf51,$$(DIR_$(1))),$$(GNU_INSTALL_ROOT)/,$$(GNU_INSTALL_ROOT)/bin/) \
+		GNU_INSTALL_ROOT=$$(if $$(findstring nrf51,$$(DIR_$(1))),$$(GNU_INSTALL_ROOT_NO_SLASH)/,$$(GNU_INSTALL_ROOT_NO_SLASH)/bin/) \
 		MAX_KEYS=$(MAX_KEYS) \
 		HAS_DEBUG=$(HAS_DEBUG) \
 		HAS_BATTERY=$(HAS_BATTERY) \
@@ -79,14 +79,20 @@ sdk: sdk-download sdk-unzip sdk-patch
 sdk-download:
 	wget -c https://nsscprodmedia.blob.core.windows.net/prod/software-and-other-downloads/sdks/nrf5/binaries/nrf5_sdk_17.1.0_ddde560.zip -O ./nrf-sdk/nRF5_SDK_17.1.0_ddde560.zip
 	wget -c https://nsscprodmedia.blob.core.windows.net/prod/software-and-other-downloads/sdks/nrf5/binaries/nrf5sdk1230.zip -O ./nrf-sdk/nRF5_SDK_12.3.0_d7731ad.zip
-	wget -c https://github.com/NordicSemiconductor/nrfx/releases/download/v3.8.0/nrfx-v3.8.0-4fb7ccb3.zip -O ./nrf-sdk/nrfx-v3.8.0-4fb7ccb3.zip
+	wget -c https://github.com/NordicSemiconductor/nrfx/releases/download/v2.7.0/nrfx-3521c97d.zip -O ./nrf-sdk/nrfx-v2.7.0-3521c97d.zip
 	wget -c https://developer.arm.com/-/media/Files/downloads/gnu/13.3.rel1/binrel/arm-gnu-toolchain-13.3.rel1-x86_64-arm-none-eabi.tar.xz -O nrf-sdk/arm-gnu-toolchain-13.3.rel1-x86_64-arm-none-eabi.tar.xz
 
 sdk-unzip:
+	mkdir -p ./nrf-sdk/nrfx
 	cd ./nrf-sdk && unzip -o nRF5_SDK_17.1.0_ddde560.zip
 	cd ./nrf-sdk && unzip -o nRF5_SDK_12.3.0_d7731ad.zip
-	cd ./nrf-sdk/nRF5_SDK_17.1.0_ddde560/modules/nrfx/ && unzip -o ../../../nrfx-v3.8.0-4fb7ccb3.zip
+	cd ./nrf-sdk/nrfx && unzip -o ../nrfx-v2.7.0-3521c97d.zip
 	cd ./nrf-sdk && tar -xvf arm-gnu-toolchain-13.3.rel1-x86_64-arm-none-eabi.tar.xz
+	cp -f ./nrf-sdk/nrfx/soc/nrfx_irqs*             nrf-sdk/nRF5_SDK_17.1.0_ddde560/modules/nrfx/soc/
+	cp -f ./nrf-sdk/nrfx/soc/nrfx_coredep.h         nrf-sdk/nRF5_SDK_17.1.0_ddde560/modules/nrfx/soc/
+	cp -f ./nrf-sdk/nrfx/drivers/nrfx_common.h      nrf-sdk/nRF5_SDK_17.1.0_ddde560/modules/nrfx/drivers/nrfx_common.h
+	cp -f ./nrf-sdk/nrfx/drivers/src/prs/nrfx_prs.h nrf-sdk/nRF5_SDK_17.1.0_ddde560/modules/nrfx/drivers/src/prs/nrfx_prs.h
 
 sdk-patch:
-	cd nrf-sdk && patch -p1 < patches/nrf-power-fix.patch
+	# Not needed...
+	# cd nrf-sdk && patch -p1 < patches/nrf-power-fix.patch
