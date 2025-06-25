@@ -1,5 +1,8 @@
 .PHONY: merge bin stflash
 
+VENV = $(PWD)/.venv
+PYTHON = $(VENV)/bin/python
+
 HAS_DEBUG ?= 0
 ifeq ($(HAS_DEBUG), 1)
 	CFLAGS += -DNRF_LOG_ENABLED=1 -DNRF_LOG_BACKEND_RTT_ENABLED=1 -DHAS_DEBUG=1
@@ -74,7 +77,7 @@ merge: $(addprefix merge_,$(TARGETS))
 
 define build_target
 bin_$(1): merge_$(1)
-	hex2bin.py $$(OUTPUT_DIRECTORY)/$(1)_$$(SOFTDEVICE_MODEL).hex \
+	$(PYTHON) $(VENV)/bin/hex2bin.py $$(OUTPUT_DIRECTORY)/$(1)_$$(SOFTDEVICE_MODEL).hex \
 	$$(OUTPUT_DIRECTORY)/$(1)_$$(SOFTDEVICE_MODEL).bin
 
 help-msg::
