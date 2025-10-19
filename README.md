@@ -40,6 +40,12 @@ To begin, download the necessary SDKs and patch them with updates from the nrfx 
 
 ```bash
 make sdk
+
+1.下载gcc-arm-none-eabi-6-2017-q2-update/  地址https://developer.arm.com/downloads/-/gnu-rm/6-2017-q2-update
+
+nRF SDK nRF51822 需 nRF5_SDK_12.3.0 + S130，nRF52810 需 nRF5_SDK_15.3.0 + S112，nRF52832 需 nRF5_SDK_15.3.0 + S132
+2.下载nRF5_SDK_12.3.0_d7731ad/  地址https://www.nordicsemi.com/Products/Development-software/nRF5-SDK/Download
+3.下载nRF5_SDK_15.3.0_59ac345/  地址https://www.nordicsemi.com/Products/Development-software/nRF5-SDK/Download
 ```
 
 Then install pip, create a venv, activate it and install IntelHex.
